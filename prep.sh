@@ -15,18 +15,15 @@ echo "    R A S P B E R R Y  P I  3  -  A R C H L I N U X"
 echo 
 echo "                      SD Creator"
 echo "    author: David Tolbert <npm.merlin.com>"
-echo "    version: 0.0.1"
-echo "    status: dev"
+echo "    version: 0.0.2"
+echo "    BETA"
 echo "  ___________________________________________________"
 echo
 
-# Workspace
-mkdir temp_raspberry_pi_3_arch_linux_sd_creator_0.0.1
-cd temp_raspberry_pi_3_arch_linux_sd_creator_0.0.1
 
 #---------------------------------------------------
 # List available devices?
-read -p "Show list available disks before proceeding[Y/n]? " -n 1 -r
+read -p "   Show list of available disks before proceeding[Y/n]? " -n 1 -r
 echo    
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -34,12 +31,53 @@ then
 fi
 
 
+
 #---------------------------------------------------
 # Get SD device name
 echo -e "${YELLOW}"
 echo 
-read -p "Enter device name [sd(x)]: " SD
-read -p "Proceed to prepare ${SD}sda for raspberry arch linux installation? " -n 1 -r
+read -p "   Enter device name [sd(x)]: " SD
+
+
+
+#---------------------------------------------------
+# Get total of partitions on disk
+echo -e "${GREEN}"
+partitions=$(grep -c "${SD}[0-9]" /proc/partitions)
+counter=1
+echo
+echo "  ___________________________________________________"
+echo
+echo "    ${partitions} partitions found"
+echo
+until [ $counter -gt $partitions ]
+do
+ echo "     - ${SD}${counter}"
+ ((counter++))
+done
+echo
+echo "  ___________________________________________________"
+echo
+
+
+
+#---------------------------------------------------
+# Delete partitions?
+if [ $partitions -gt 0 ]
+then
+echo -e "${RED}"
+echo 
+read -p "   In order to proceed with the installation the above partitions and contained data will have to be deleted completely. Do you wish to proceed[Y/n]?"  -n 1 -r
+echo
+if [[ $REPLY =~ ^[Nn]$ ]]
+then
+ echo -e "${RED}"
+ echo "Setup cancelled by user"
+ exit
+fi
+fi
+echo
+read -p "   Are you absolutely sure you want to use '${SD}' to create your raspberry OS?[Y/n]"  -n 1 -r
 echo
 if [[ $REPLY =~ ^[Nn]$ ]]
 then
@@ -48,9 +86,72 @@ then
  exit
 fi
 
-#sudo dd if=/dev/zero of=/dev/${SD} bs=512 count=1
+
+
 #---------------------------------------------------
-# Create partitions
+# Unmount partitions...
+echo -e "${GREEN}"
+partitions=$(grep -c "${SD}[0-9]" /proc/partitions)
+counter=1
+until [ $counter -gt $partitions ]
+do
+ echo
+ echo "     Unmounting ${SD}${counter} ..."
+ sudo umount /dev/$SD$counter
+ ((counter++))
+done
+echo
+echo "All devices unmounted"
+
+echo
+
+
+#---------------------------------------------------
+# Create workspace
+workspace="temp_raspberry_pi_3_arch_linux_sd_creator_0.0.1"
+sudo rm -rf $workspace
+mkdir -p $workspace
+cd $workspace
+
+
+
+#---------------------------------------------------
+# Install arch-linux?
+echo -e "${GREEN}"
+sudo sfdisk -l /dev/$SD
+echo
+read -p "   Start installation?[Y/n]"  -n 1 -r
+echo
+if [[ $REPLY =~ ^[Nn]$ ]]
+then
+ echo -e "${RED}"
+ echo
+ echo "Setup cancelled by user"
+ exit
+fi
+
+
+
+#---------------------------------------------------
+# Delete old partitions
+counter=1
+until [ $counter -gt $partitions ]
+do
+ echo
+ echo "     Deleting ${SD}${counter}"
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk /dev/${SD}
+  p
+  d     
+  ${counter}
+  w
+EOF
+ ((counter++))
+done
+
+
+
+#---------------------------------------------------
+# Create required partitions
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk /dev/${SD}
   o     # clear partition table
   n     # create new partition
@@ -66,42 +167,36 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk /dev/${SD}
         # default, start immediately after preceding partition
         # default, extend partition to end of disk
   w     # write the partition table
-  q     # quit
 EOF
 
-
 #---------------------------------------------------
-# Format partitions and mount directories
+# Format partitions
 # --> sdX1
-sudo mkfs.vfat /dev/${SD}1
-mkdir boot
+sudo mkfs.vfat /dev/${SD}1 
+sudo mkdir boot
 sudo mount /dev/${SD}1 boot
 # --> sdX2
-sudo mkfs.ext4 /dev/${SD}2
-mkdir root
+sudo mkfs.ext4 -F /dev/${SD}2
+sudo mkdir root
 sudo mount /dev/${SD}2 root
 
-
 #---------------------------------------------------
-# Download arch-linux and move it onto the SD card
-sudo su
-wget http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-2-latest.tar.gz
-bsdtar -xpf ArchLinuxARM-rpi-2-latest.tar.gz -C root
-sync
-mv root/boot/* boot
-umount boot root
-
-#---------------------------------------------------
-# Delete temp folder?
-read -p "Would you like to keep the temporary files(default=n)? " -n 1 -r
+# Download and install arch-linux
+echo -e "${GREEN}"
 echo
-if [[ $REPLY =~ ^[Nn]$ ]]
-then
- cd ..
- rm -rf temp_raspberry_pi_3_arch_linux_sd_creator_0.0.1
- exit
-fi
+echo "      Creating Arch-Raspberry SD..."
+echo
+sudo -u root wget http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-2-latest.tar.gz
+sudo -u root bsdtar -xpf ArchLinuxARM-rpi-2-latest.tar.gz -C root
+sudo -u root sync
+sudo -u root mv root/boot/* boot
+sudo -u root umount boot root
 
-exit
+cd ..
+sudo umount /dev/$SD'1'
+sudo umount /dev/$SD'2'
+sudo rm -rf $workspace
 
-## END OF SETUP
+echo
+echo "Arch-Raspberry SD was created. Insert your SD into your raspberry to test the OS."
+echo
