@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: testContainer
+    image: sameersbn/postgresql:9.6-2
+    ports:
+      - "5432:5432"
+    environment:
+      - DEBUG=true      
+      - DB_NAME=testDb
+      - DB_USER=admin
+      - DB_PASS=admin
+    volumes:
+      - ./postgres:/var/lib/postgresql
+      
