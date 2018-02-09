@@ -6,13 +6,15 @@ The provided scripts automate the manual process of installing arch-linux onto a
 
 > Manual installation guide: https://archlinuxarm.org/platforms/armv6/raspberry-pi
 
-## Tested Enviroment for creating SD
 
-- Raspberry Pi 3
+## Creating a bootable SD (rasparch-sd.sh)
+
+#### Test Enviroment
+
 - Hardware Plattform: x86_64
 - OS: Ubuntu Linux zw 4.13.0-32-generic
 
-## SD Setup (rasparch-sd.sh)
+#### HowTo
 
 To setup a bootable *arch-linux* SD insert your SD into your computer, open a terminal and follow the steps shown below. The script will handle the partitioning of the SD and installation of the OS.
 
@@ -29,7 +31,14 @@ To setup a bootable *arch-linux* SD insert your SD into your computer, open a te
 
 ``` 
 
-## OS upgrade (rasparch-up.sh)
+## Prepare your Raspberry OS for development (rasparch-up.sh)
+
+#### Test Enviroment
+
+- Hardware: Raspberry Pi 3
+- OS: Arch-Linux
+
+#### HowTo
 
 This script updates your system and creates a basic development enviroment.
 To get started insert your newly created OS SD into your *raspberry-pi* and fire it up. If everything goes well you will be asked to login. Sign in with **username=root** and **password=root** then follow the steps below.

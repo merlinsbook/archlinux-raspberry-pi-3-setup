@@ -37,3 +37,7 @@ pacman -S docker-compose --noconfirm
 pacman -S nodejs --noconfirm
 systemctl enable docker.service
 systemctl start docker
+echo
+echo -e "${GREEN}" 
+echo "System update complete"
+echo -e "${NOCOLOR}" 
