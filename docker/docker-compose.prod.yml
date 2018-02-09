@@ -3,14 +3,12 @@ version: '3'
 services:
   postgres:
     container_name: prodContainer
-    image: sameersbn/postgresql:9.6-2
+    image: tobi312/rpi-postgresql
     ports:
       - "5432:5432"
-    environment:
-      - DEBUG=true      
-      - DB_NAME=testDb
-      - DB_USER=admin
-      - DB_PASS=admin
+    environment:     
+      - POSTGRES_DB=testDb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
     volumes:
-      - ./postgres:/var/lib/postgresql
-      
+      - ./postgres:/var/lib/postgresql/data -e
