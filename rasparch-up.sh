@@ -40,4 +40,7 @@ systemctl start docker
 echo
 echo -e "${GREEN}" 
 echo "System update complete"
+echo "Rebooting..."
 echo -e "${NOCOLOR}" 
+sleep 4
+reboot
