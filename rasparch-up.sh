@@ -14,21 +14,26 @@ echo
 echo "          A R C H L I N U X  -  S E T U P"
 echo 
 echo "    author: David Tolbert <npm.merlin.com>"
-echo "    version: 0.0.1"
+echo "    version: 0.0.2"
 echo "    BETA"
 echo "  ___________________________________________________"
 echo
 
 
 #---------------------------------------------------
-# Set keyboard layout
+# Keyboard layout
 echo -e "${YELLOW}" 
-read -p "   Enter a keymap to set your keyboard layout[default=de]: " keymap
+read -p "   Enter a keymap to set your keyboard layout[default=en]: " keymap
 localectl set-keymap --no-convert $keymap
 
 
 #---------------------------------------------------
-# Update & upgrade system
+# Installations
+#pacman -S openssh --noconfirm
+#pacman -S postgresql --noconfirm
 pacman -Syu --noconfirm
 pacman -S docker --noconfirm
 pacman -S docker-compose --noconfirm
+pacman -S nodejs --noconfirm
+systemctl enable docker.service
+systemctl start docker

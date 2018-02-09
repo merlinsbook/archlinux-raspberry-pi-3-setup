@@ -15,7 +15,7 @@ echo "    R A S P B E R R Y  P I  3  -  A R C H L I N U X"
 echo 
 echo "                      SD Creator"
 echo "    author: David Tolbert <npm.merlin.com>"
-echo "    version: 0.0.2"
+echo "    version: 0.0.3"
 echo "    BETA"
 echo "  ___________________________________________________"
 echo
@@ -118,7 +118,6 @@ cd $workspace
 #---------------------------------------------------
 # Install arch-linux?
 echo -e "${GREEN}"
-sudo sfdisk -l /dev/$SD
 echo
 read -p "   Start installation?[Y/n]"  -n 1 -r
 echo
@@ -198,5 +197,5 @@ sudo umount /dev/$SD'2'
 sudo rm -rf $workspace
 
 echo
-echo "Arch-Raspberry SD was created. Insert your SD into your raspberry to test the OS."
+echo "Arch-Linux was successfully installed onto /dev/${SD}"
 echo
