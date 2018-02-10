@@ -1,6 +1,6 @@
 # Raspberry Pi Arch Linux Setup
 
-The provided scripts automate the manual process of installing arch-linux onto a raspberry pi device and setting up a basic enviroment for developments. Make sure your connected to the internet at all times.
+The provided scripts automate the manual process of installing arch-linux onto a raspberry pi device and setting up a basic enviroment for developments. Make sure you're connected to the internet at all times.
 
 > The provided scripts were intended for personal use only.
 
