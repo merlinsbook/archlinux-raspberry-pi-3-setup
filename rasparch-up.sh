@@ -13,7 +13,7 @@ echo "  ___________________________________________________"
 echo
 echo "          A R C H L I N U X  -  S E T U P"
 echo 
-echo "    author: David Tolbert <npm.merlin.com>"
+echo "    author: David Tolbert <npm.merlin@gmail.com>"
 echo "    version: 0.0.2"
 echo "    BETA"
 echo "  ___________________________________________________"
