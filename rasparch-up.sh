@@ -30,11 +30,13 @@ localectl set-keymap --no-convert $keymap
 #---------------------------------------------------
 # Installations
 #pacman -S openssh --noconfirm
-#pacman -S postgresql --noconfirm
 pacman -Syu --noconfirm
+pacman -S networkmanager --noconfirm
+pacman -S bridge-utils --noconfirm
 pacman -S docker --noconfirm
 pacman -S docker-compose --noconfirm
 pacman -S nodejs --noconfirm
+pacman -S postgresql --noconfirm
 systemctl enable docker.service
 systemctl start docker
 echo
