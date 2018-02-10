@@ -18,7 +18,7 @@ header()
   echo "    R A S P B E R R Y  P I  3  -  A R C H L I N U X"
   echo 
   echo "                      SD Creator"
-  echo "    author: David Tolbert <npm.merlin.com>"
+  echo "    author: David Tolbert <npm.merlin@gmail.com>"
   echo "    version: 0.0.4"
   echo "    BETA"
   echo "  ___________________________________________________"
